@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import "../util"
 
 export class Vertex {
   constructor(public visualX: number, public visualY: number) {}
@@ -8,15 +9,14 @@ export class Vertex {
   }
 
   distanceTo(other: Vertex): number {
-    const pow2 = (num: number) => num * num
     return Math.sqrt(
-      pow2(this.visualX - other.visualX) + pow2(this.visualY - other.visualY)
+      Math.pow2(this.visualX - other.visualX) +
+        Math.pow2(this.visualY - other.visualY)
     )
   }
 
   distanceToPoint(x: number, y: number): number {
-    const pow2 = (num: number) => num * num
-    return Math.sqrt(pow2(this.visualX - x) + pow2(this.visualY - y))
+    return Math.sqrt(Math.pow2(this.visualX - x) + Math.pow2(this.visualY - y))
   }
 }
 
@@ -49,8 +49,9 @@ export const useGraphStore = create<GraphStore>((set, get) => ({
   distanceToClosestVertex(x, y) {
     if (get().vertices.length == 0) return Number.POSITIVE_INFINITY
 
-    // TODO: replace math.min with custom extension
-    return Math.min(...get().vertices.map((e, i) => e.distanceToPoint(x, y)))
+    return get()
+      .vertices.map((e, i) => e.distanceToPoint(x, y))
+      .min()
   },
   addVert(visual_x, visual_y) {
     set((state) => {
@@ -71,19 +72,19 @@ export const useGraphStore = create<GraphStore>((set, get) => ({
     if (index < 0) throw RangeError()
 
     set((state) => {
-      state.edges.splice(index, 1)
+      state.edges.popAt(index)
       return { edges: state.edges }
     })
   },
   removeVert(index) {
     set((state) => {
-      state.edges.splice(index, 1)
+      state.edges.popAt(index)
       for (let x of state.edges) {
         // remove item at index
         if (x.a >= index) x.a -= 1
         if (x.b >= index) x.b -= 1
       }
-      state.vertices.splice(index, 1)
+      state.vertices.popAt(index)
       return { vertices: state.vertices, edges: state.edges }
     })
   },

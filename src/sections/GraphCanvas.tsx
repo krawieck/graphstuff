@@ -7,8 +7,8 @@ import {
   LINE_WIDTH,
   SELECTED_CIRCLE_COLOR,
 } from "../contants"
-import { Vertex, useGraphStore } from "../graph"
 import { useKeyPress } from "../hooks/useKeyHold"
+import { Vertex, useGraphStore } from "../state/graph"
 
 export const GraphCanvas: React.FC = ({}) => {
   const [isDraggingLine, setIsDraggingLine] = useState(false)

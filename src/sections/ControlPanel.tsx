@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button } from "../components/Button"
 import { Dropdown } from "../components/Dropdown"
-import { useGraphStore, Vertex } from "../graph"
+import { useGraphStore, Vertex } from "../state/graph"
 
 export const ControlPanel: React.FC = () => {
   const {
