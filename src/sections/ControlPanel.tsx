@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { Button } from "../components/Button"
 import { Dropdown } from "../components/Dropdown"
-import { useGraphStore, Vertex } from "../state/graph"
+import { Vertex } from "../models/vertex"
+import { useGraphStore } from "../state/graph"
 
 export const ControlPanel: React.FC = () => {
   const {
@@ -36,9 +37,9 @@ export const ControlPanel: React.FC = () => {
       {selectedVert != null && <button>connect to itself</button>}
       vertices:
       <ul>
-        {vertices.map(({ visualX, visualY }, i) => (
-          <li key={`${visualX}_${visualY}`}>
-            vert {i + 1} ({visualX}, {visualY})
+        {vertices.map(({ x, y }, i) => (
+          <li key={`${x}_${y}`}>
+            vert {i + 1} ({x}, {y})
             <button className="pl-2" onClick={() => handleRemoveVert(i)}>
               ❌
             </button>

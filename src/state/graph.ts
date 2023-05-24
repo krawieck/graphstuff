@@ -1,34 +1,7 @@
 import { create } from "zustand"
+import { Edge } from "../models/edge"
+import { Vertex } from "../models/vertex"
 import "../util"
-
-export class Vertex {
-  constructor(public visualX: number, public visualY: number) {}
-
-  toString() {
-    return `${this.visualX}_${this.visualY}`
-  }
-
-  distanceTo(other: Vertex): number {
-    return Math.sqrt(
-      Math.pow2(this.visualX - other.visualX) +
-        Math.pow2(this.visualY - other.visualY)
-    )
-  }
-
-  distanceToPoint(x: number, y: number): number {
-    return Math.sqrt(Math.pow2(this.visualX - x) + Math.pow2(this.visualY - y))
-  }
-}
-
-export class Edge {
-  constructor(public a: number, public b: number) {
-    if (!Number.isInteger(b) || !Number.isInteger(b)) throw TypeError()
-  }
-
-  toString() {
-    return `${this.a}_${this.b}`
-  }
-}
 
 export interface GraphStore {
   vertices: Vertex[]
@@ -92,8 +65,8 @@ export const useGraphStore = create<GraphStore>((set, get) => ({
     if (!Number.isInteger(index)) throw TypeError()
     if (index < 0) throw RangeError()
     set((state) => {
-      state.vertices[index].visualX = newX
-      state.vertices[index].visualY = newY
+      state.vertices[index].x = newX
+      state.vertices[index].y = newY
       return { vertices: state.vertices }
     })
   },

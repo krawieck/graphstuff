@@ -1,6 +1,6 @@
 import { KonvaEventObject } from "konva/lib/Node"
 import { useState } from "react"
-import { Circle, Layer, Line, Stage } from "react-konva"
+import { Arrow, Circle, Layer, Stage } from "react-konva"
 import {
   CIRCLE_COLOR,
   CIRCLE_RADIUS,
@@ -8,10 +8,10 @@ import {
   SELECTED_CIRCLE_COLOR,
 } from "../contants"
 import { useKeyPress } from "../hooks/useKeyHold"
-import { Vertex, useGraphStore } from "../state/graph"
+import { Vertex } from "../models/vertex"
+import { useGraphStore } from "../state/graph"
 
 export const GraphCanvas: React.FC = ({}) => {
-  const [isDraggingLine, setIsDraggingLine] = useState(false)
   const {
     edges,
     vertices,
@@ -22,8 +22,10 @@ export const GraphCanvas: React.FC = ({}) => {
     setSelectedVert,
     selectedVert,
   } = useGraphStore()
-  // const [selectedVert, setSelectedVert] = useState<number | null>(null)
+
   const [visualVerts, setVisualVerts] = useState<Vertex[]>([])
+  const [isDraggingLine, setIsDraggingLine] = useState(false)
+
   const shiftIsPressed = useKeyPress("Shift")
 
   function handleClick(event: KonvaEventObject<MouseEvent>) {
@@ -34,6 +36,8 @@ export const GraphCanvas: React.FC = ({}) => {
     addVert(x, y)
     setVisualVerts([...vertices])
   }
+
+  // VERT DRAGGABLE
   function handleVertDragEnd(i: number, event: KonvaEventObject<DragEvent>) {
     const { x, y } = event.evt
     moveVertex(i, x, y)
@@ -81,24 +85,19 @@ export const GraphCanvas: React.FC = ({}) => {
               stroke="black"
               tension={0.5}
               width={LINE_WIDTH}
-              points={[
-                pointA.visualX,
-                pointA.visualY,
-                pointB.visualX,
-                pointB.visualY,
-              ]}
+              points={[pointA.x, pointA.y, pointB.x, pointB.y]}
             />
           )
         })}
         {vertices.map((vert, i) => {
-          const { visualX, visualY } = vert
+          const { x, y } = vert
           return (
             <>
               <Circle
-                key={`${visualX}_${visualY}`}
+                key={`${x}_${y}`}
                 radius={CIRCLE_RADIUS}
-                x={visualX}
-                y={visualY}
+                x={x}
+                y={y}
                 draggable={!shiftIsPressed}
                 onDragMove={(e) => handleVertDrag(i, e)}
                 onDragEnd={(e) => handleVertDragEnd(i, e)}
