@@ -55,7 +55,7 @@ export const ControlPanel: React.FC = () => {
           const { a, b } = edge
           return (
             <li key={`edge_${a}_${b}_${edgesCount[edge.toString()]}`}>
-              edge {i + 1} ({a + 1}--{b + 2})
+              edge {i + 1} ({a + 1}→{b + 1})
               <button className="pl-2" onClick={() => handleRemoveEdge(i)}>
                 ❌
               </button>

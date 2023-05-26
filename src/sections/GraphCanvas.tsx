@@ -50,12 +50,12 @@ export const GraphCanvas: React.FC = ({}) => {
     if (i === selectedVert) {
       // unselect if clicked again
       setSelectedVert(null)
-    } else if (!selectedVert) {
+    } else if (selectedVert == null) {
       // select if none selected already
       setSelectedVert(i)
     } else {
       // make edge if 2 selected
-      addEdge(i, selectedVert)
+      addEdge(selectedVert, i)
       setSelectedVert(null)
     }
   }
