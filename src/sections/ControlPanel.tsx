@@ -32,7 +32,7 @@ export const ControlPanel: React.FC = () => {
   const [dropdownVertex, setDropdownVertex] = useState<Vertex | null>(null)
 
   function handleRemoveVert(index: number) {
-    console.log(index)
+    if (selectedVert === index) setSelectedVert(null)
     removeVert(index)
   }
 

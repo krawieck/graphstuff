@@ -29,10 +29,10 @@ export const GraphCanvas: React.FC = ({}) => {
   const shiftIsPressed = useKeyPress("Shift")
 
   function handleClick(event: KonvaEventObject<MouseEvent>) {
-    const { x, y } = event.evt
-    if (distanceToClosestVertex(x, y) < CIRCLE_RADIUS * 2) return
+    if (distanceToClosestVertex(event.evt) < CIRCLE_RADIUS * 2) return
     if (shiftIsPressed) return
 
+    const { x, y } = event.evt
     addVert(x, y)
     setVisualVerts([...vertices])
   }
