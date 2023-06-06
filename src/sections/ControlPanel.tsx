@@ -47,8 +47,6 @@ export const ControlPanel: React.FC = () => {
         altLocation ? "bottom-0 object-right-bottom" : "top-0 object-right-top"
       } right-0 fixed duration-250 transition-all bg-white float-right  w-1/5  shadow-md z-10 p-2 m-1 border-2 rounded-md  border-black border-solid`}
     >
-      {selectedVert != null && <span>STH IS SELECTED</span>}
-      {selectedVert != null && <button>connect to itself</button>}
       vertices:
       <ul>
         {vertices.map(({ x, y }, i) => (
@@ -77,7 +75,6 @@ export const ControlPanel: React.FC = () => {
           )
         })}
       </ul>
-      <Button>add edge</Button>
       <Dropdown<Vertex>
         options={vertices.map((e, i) => ({ value: e, label: i.toString() }))}
         unselectedText="select first vertex"
