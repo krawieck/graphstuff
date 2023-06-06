@@ -1,13 +1,9 @@
 import { KonvaEventObject } from "konva/lib/Node"
 import { useState } from "react"
 import { Arrow, Circle, Layer, Stage } from "react-konva"
-import {
-  CIRCLE_COLOR,
-  CIRCLE_RADIUS,
-  LINE_WIDTH,
-  SELECTED_CIRCLE_COLOR,
-} from "../contants"
+import { CIRCLE_COLOR, CIRCLE_RADIUS, LINE_WIDTH, SELECTED_CIRCLE_COLOR } from "../contants"
 import { useKeyPress } from "../hooks/useKeyHold"
+import { arrowStickingPoint, pointStickingOutBetweenPoints } from "../math/utils"
 import { Vertex } from "../models/vertex"
 import { useGraphStore } from "../state/graph"
 
@@ -71,21 +67,36 @@ export const GraphCanvas: React.FC = ({}) => {
     >
       <Layer>
         {edges.map((edge, i) => {
+          const edgeId = edge.toString()
+
           const pointA = visualVerts[edge.a]
           const pointB = visualVerts[edge.b]
-          if (edgesCount[edge.toString()]) {
-            edgesCount[edge.toString()]++
+
+          if (edgesCount[edgeId]) {
+            edgesCount[edgeId]++
           } else {
-            edgesCount[edge.toString()] = 1
+            edgesCount[edgeId] = 1
           }
 
+          const [actualPointA, actualPointB] = arrowStickingPoint(pointA, pointB)
+
+          const howFarOut = (edgesCount[edgeId] - 1) * 20
+          const middle = pointStickingOutBetweenPoints(actualPointA, actualPointB, howFarOut)
+
           return (
-            <Line
-              key={edge.toString() + edgesCount[edge.toString()]}
+            <Arrow
+              key={edgeId + edgesCount[edgeId]}
               stroke="black"
               tension={0.5}
               width={LINE_WIDTH}
-              points={[pointA.x, pointA.y, pointB.x, pointB.y]}
+              points={[
+                actualPointA.x,
+                actualPointA.y,
+                middle.x,
+                middle.y,
+                actualPointB.x,
+                actualPointB.y,
+              ]}
             />
           )
         })}

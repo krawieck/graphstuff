@@ -1,5 +1,5 @@
 import { CIRCLE_RADIUS } from "../contants"
-import { Point } from "../models/point"
+import { Point, Vec2 } from "../models/point"
 import "../util"
 
 export function calcAngle(a: Point, b: Point) {
@@ -24,8 +24,17 @@ export function arrowStickingPoint(a: Point, b: Point): [Point, Point] {
   ]
 }
 
-export function arrowStickingPoint(a: Point, b: Point): Point {
-  const x = CIRCLE_RADIUS * Math.cos(angle(b, a))
-  const y = CIRCLE_RADIUS * Math.sin(angle(b, a))
-  return { x: b.x - x, y: b.y - y }
+export function pointStickingOutBetweenPoints(
+  a: Point,
+  b: Point,
+  howMuchStickingOut: number
+): Point {
+  const vecA = Vec2.fromPoint(a)
+  const vecB = Vec2.fromPoint(b)
+
+  const vecBminusA = vecB.subtract(vecA)
+
+  const firstPart = vecA.add(vecB).div(2)
+  const secondPart = vecBminusA.div(vecBminusA.len()).rotate90().times(howMuchStickingOut)
+  return firstPart.add(secondPart)
 }
