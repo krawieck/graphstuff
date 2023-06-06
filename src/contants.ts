@@ -5,3 +5,5 @@ export const SELECTED_CIRCLE_COLOR = "black"
 
 /// aka. edge width
 export const LINE_WIDTH = 5
+
+export const LOG = true

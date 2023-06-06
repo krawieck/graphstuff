@@ -4,14 +4,28 @@ import { Dropdown } from "../components/Dropdown"
 import { Vertex } from "../models/vertex"
 import { useGraphStore } from "../state/graph"
 
+function transformBool(contains?: boolean) {
+  if (contains == undefined) return "checking..."
+  if (contains) {
+    return "😎👌"
+  } else {
+    return "😭👎"
+  }
+}
+
 export const ControlPanel: React.FC = () => {
   const {
     edges,
     vertices,
     removeEdge,
     removeVert,
+    addEdge,
     selectedVert,
     setSelectedVert,
+    containsEulerianCycle,
+    containsEulerianPath,
+    containsHamiltonianPath,
+    containsHamiltonianCycle,
   } = useGraphStore()
 
   const [altLocation, setAltLocation] = useState(false)
@@ -70,6 +84,17 @@ export const ControlPanel: React.FC = () => {
         selected={dropdownVertex}
         onChange={setDropdownVertex}
       />
+      <br />
+      contains:
+      <br />
+      eulerian cycle: {transformBool(containsEulerianCycle)}
+      <br />
+      eulerian path: {transformBool(containsEulerianPath)}
+      <br />
+      hamiltonian cycle: {transformBool(containsHamiltonianCycle)}
+      <br />
+      hamiltonian path: {transformBool(containsHamiltonianPath)}
+      <br />
       {/* move window button */}
       <button
         className="float-right"

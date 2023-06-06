@@ -1,4 +1,5 @@
 import "../util"
+import { Point } from "./point"
 
 export class Vertex implements Point {
   constructor(
@@ -11,12 +12,8 @@ export class Vertex implements Point {
   toString() {
     return `${this.x}_${this.y}`
   }
+}
 
-  distanceTo(other: Vertex): number {
-    return Math.sqrt(Math.pow2(this.x - other.x) + Math.pow2(this.y - other.y))
-  }
-
-  distanceToPoint(x: number, y: number): number {
-    return Math.sqrt(Math.pow2(this.x - x) + Math.pow2(this.y - y))
-  }
+export function distanceBetweenPoints(a: Point, b: Point) {
+  return Math.sqrt(Math.pow2(a.x - b.x) + Math.pow2(a.y - b.y))
 }
