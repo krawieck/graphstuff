@@ -105,6 +105,7 @@ export const useGraphStore = create<GraphStore>(
         state.edges.popAt(index)
         return { edges: state.edges }
       })
+      calculateGraphProperties(set, get)
     },
     removeVert(index) {
       set(state => {
@@ -117,6 +118,7 @@ export const useGraphStore = create<GraphStore>(
         state.vertices.popAt(index)
         return { vertices: state.vertices, edges: state.edges }
       })
+      calculateGraphProperties(set, get)
     },
     moveVertex(index, newX, newY) {
       if (!Number.isInteger(index)) throw TypeError()
