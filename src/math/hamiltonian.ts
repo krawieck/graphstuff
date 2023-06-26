@@ -2,12 +2,18 @@ import { Edge } from "../models/edge"
 import { Vertex } from "../models/vertex"
 import "../util"
 
+export enum Hamiltonian {
+  /** hamiltonian graph */
+  fully,
+  /** semi-hamiltonian graph */
+  semi,
+  /** not hamiltonian graph */
+  not,
+}
+
 export type AdjacencyMatrix = number[][]
 
-export function convertToAdjacencyMatrix(
-  vertices: Vertex[],
-  edges: Edge[]
-): AdjacencyMatrix {
+export function convertToAdjacencyMatrix(vertices: Vertex[], edges: Edge[]): AdjacencyMatrix {
   // create 2d array and fill it with zeroes
   const adjacencyMatrix: AdjacencyMatrix = Array(vertices.length)
     .fill(0)
@@ -22,12 +28,7 @@ export function convertToAdjacencyMatrix(
   return adjacencyMatrix
 }
 
-function isSafe(
-  vertIndex: number,
-  graph: AdjacencyMatrix,
-  path: number[],
-  pos: number
-): boolean {
+function isSafe(vertIndex: number, graph: AdjacencyMatrix, path: number[], pos: number): boolean {
   if (graph[path[pos - 1]][vertIndex] === 0) {
     return false
   }
@@ -39,7 +40,7 @@ function isSafe(
   return true
 }
 
-function hamCycleUtil(graph: AdjacencyMatrix, path: number[], pos: number) {
+function hamCycleUtil(graph: AdjacencyMatrix, path: number[], pos: number): boolean {
   if (pos === graph.length) {
     return graph[path[pos - 1]][path[0]] === 1
   }
@@ -48,7 +49,7 @@ function hamCycleUtil(graph: AdjacencyMatrix, path: number[], pos: number) {
     if (isSafe(v, graph, path, pos)) {
       path[pos] = v
 
-      if (hamCycleUtil(graph, path, pos + 1) === true) {
+      if (hamCycleUtil(graph, path, pos + 1)) {
         return true
       }
 

@@ -2,13 +2,8 @@ import { GetState, SetState, StateCreator, StoreApi, create } from "zustand"
 import { Edge } from "../models/edge"
 import { Vertex, distanceBetweenPoints } from "../models/vertex"
 
-import { LOG } from "../contants"
-import {
-  calculateEulerianCycle,
-  calculateEulerianPath,
-  calculateHamiltonianCycle,
-  calculateHamiltonianPath,
-} from "../math/algorithms"
+import { calculateHamiltonianCycle, calculateHamiltonianPath } from "../math/algorithms"
+import { Eulerian, isEulerian } from "../math/eulerian"
 import { convertToAdjacencyMatrix } from "../math/hamiltonian"
 import { Point } from "../models/point"
 import "../util"
@@ -26,17 +21,16 @@ export interface GraphStore {
   setSelectedVert(vert: number | null): void
   containsHamiltonianPath?: boolean
   containsHamiltonianCycle?: boolean
-  containsEulerianPath?: boolean
-  containsEulerianCycle?: boolean
+  eulerian?: Eulerian
 }
 
 type Middleware<S> = (
   config: StateCreator<S>
 ) => (set: SetState<S>, get: GetState<S>, api: StoreApi<S>) => S
 
-const log: Middleware<GraphStore> = (config) => (set, get, api) =>
+const log: Middleware<GraphStore> = config => (set, get, api) =>
   config(
-    (args) => {
+    args => {
       console.log("  applying", args)
       set(args)
       console.log("  new state", get())
@@ -56,9 +50,8 @@ function calculateGraphProperties(
   get: () => GraphStore
 ) {
   console.time("graph properties calculation time")
-  set((state) => ({
-    containsEulerianCycle: undefined,
-    containsEulerianPath: undefined,
+  set(state => ({
+    eulerian: undefined,
     containsHamiltonianCycle: undefined,
     containsHamiltonianPath: undefined,
   }))
@@ -66,15 +59,8 @@ function calculateGraphProperties(
   const { vertices, edges } = get()
   const adjacencyMatrix = convertToAdjacencyMatrix(vertices, edges)
 
-  const containsEulerianCycle = calculateEulerianCycle(vertices, edges)
-  set({ containsEulerianCycle })
-
-  // don't calculate path if already contains cycle
-  if (containsEulerianCycle) {
-    set({ containsEulerianPath: true })
-  } else {
-    set({ containsEulerianPath: calculateEulerianPath(vertices, edges) })
-  }
+  const eulerian = isEulerian(vertices, edges)
+  set({ eulerian: eulerian })
 
   const containsHamiltonianCycle = calculateHamiltonianCycle(adjacencyMatrix)
   set({ containsHamiltonianCycle })
@@ -94,7 +80,7 @@ export const useGraphStore = create<GraphStore>(
     edges: [],
     // mutating methods
     addVert(visual_x, visual_y) {
-      set((state) => {
+      set(state => {
         state.vertices.push(new Vertex(visual_x, visual_y))
         return { vertices: state.vertices }
       })
@@ -104,7 +90,7 @@ export const useGraphStore = create<GraphStore>(
     addEdge(i1, i2) {
       if (!Number.isInteger(i1) || !Number.isInteger(i2)) throw TypeError()
       if (i1 < 0 || i2 < 0) throw RangeError()
-      set((state) => {
+      set(state => {
         state.edges.push(new Edge(i1, i2))
         return { edges: state.edges }
       })
@@ -115,14 +101,14 @@ export const useGraphStore = create<GraphStore>(
       if (!Number.isInteger(index)) throw TypeError()
       if (index < 0) throw RangeError()
 
-      set((state) => {
+      set(state => {
         state.edges.popAt(index)
         return { edges: state.edges }
       })
     },
     removeVert(index) {
-      set((state) => {
-        state.edges = state.edges.filter((e) => e.a != index && e.b != index)
+      set(state => {
+        state.edges = state.edges.filter(e => e.a != index && e.b != index)
         for (let x of state.edges) {
           // remove item at index
           if (x.a >= index) x.a -= 1
@@ -135,7 +121,7 @@ export const useGraphStore = create<GraphStore>(
     moveVertex(index, newX, newY) {
       if (!Number.isInteger(index)) throw TypeError()
       if (index < 0) throw RangeError()
-      set((state) => {
+      set(state => {
         state.vertices[index].x = newX
         state.vertices[index].y = newY
         return { vertices: state.vertices }
@@ -152,12 +138,11 @@ export const useGraphStore = create<GraphStore>(
     // SELECTED VERT
     selectedVert: null,
     setSelectedVert(vert) {
-      set((state) => ({ selectedVert: vert }))
+      set(state => ({ selectedVert: vert }))
     },
     // CYCLES AND PATHS
     containsHamiltonianPath: false,
     containsHamiltonianCycle: false,
-    containsEulerianPath: false,
-    containsEulerianCycle: false,
+    eulerian: Eulerian.not,
   }))
 )

@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { Button } from "../components/Button"
 import { Dropdown } from "../components/Dropdown"
+import { Eulerian } from "../math/eulerian"
 import { Vertex } from "../models/vertex"
 import { useGraphStore } from "../state/graph"
 
@@ -13,6 +13,19 @@ function transformBool(contains?: boolean) {
   }
 }
 
+function describeEulerian(value?: Eulerian) {
+  switch (value) {
+    case Eulerian.fully:
+      return "eulerian"
+    case Eulerian.semi:
+      return "semi-eulerian"
+    case Eulerian.not:
+      return "not eulerian"
+    default:
+      return "[checking...]"
+  }
+}
+
 export const ControlPanel: React.FC = () => {
   const {
     edges,
@@ -22,10 +35,9 @@ export const ControlPanel: React.FC = () => {
     addEdge,
     selectedVert,
     setSelectedVert,
-    containsEulerianCycle,
-    containsEulerianPath,
     containsHamiltonianPath,
     containsHamiltonianCycle,
+    eulerian,
   } = useGraphStore()
 
   const [altLocation, setAltLocation] = useState(false)
@@ -84,19 +96,14 @@ export const ControlPanel: React.FC = () => {
       <br />
       contains:
       <br />
-      eulerian cycle: {transformBool(containsEulerianCycle)}
-      <br />
-      eulerian path: {transformBool(containsEulerianPath)}
+      The graph is {describeEulerian(eulerian)}
       <br />
       hamiltonian cycle: {transformBool(containsHamiltonianCycle)}
       <br />
       hamiltonian path: {transformBool(containsHamiltonianPath)}
       <br />
       {/* move window button */}
-      <button
-        className="float-right"
-        onClick={() => setAltLocation(!altLocation)}
-      >
+      <button className="float-right" onClick={() => setAltLocation(!altLocation)}>
         {altLocation ? "⤴️" : "⤵️"}
       </button>
     </div>
