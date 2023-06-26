@@ -11,50 +11,6 @@ export enum Eulerian {
   not,
 }
 
-function isStronglyConnected(graph: ConnectedGraph, index: number = 0): boolean {
-  let visited: boolean[] = Array(graph.length).fill(false)
-
-  // traverse the graph with DFS
-  function dfs(index: number, reverse: boolean = false) {
-    if (visited[index]) return
-    visited[index] = true
-
-    if (reverse) {
-      graph[index].in.map(e => dfs(e, true))
-    } else {
-      graph[index].out.map(e => dfs(e))
-    }
-  }
-
-  dfs(index)
-
-  if (visited.includes(false)) return false
-
-  // check the inverse of the graph
-  visited = visited.fill(false)
-  dfs(index, true)
-
-  if (visited.includes(false)) return false
-
-  return true
-}
-
-function isConnected(graph: ConnectedGraph, index: number): boolean {
-  let visited: boolean[] = Array(graph.length).fill(false)
-
-  // traverse the graph with DFS
-  function dfs(index: number) {
-    if (visited[index]) return
-    visited[index] = true
-
-    graph[index].out.map(dfs)
-  }
-
-  dfs(index)
-
-  return !visited.includes(false)
-}
-
 /**
  * Checks if given graph is eulerian
  *
@@ -128,4 +84,48 @@ export function isEulerian(vertices: Vertex[], edges: Edge[]): Eulerian {
     default: // >2 ODDS
       return Eulerian.not
   }
+}
+
+function isStronglyConnected(graph: ConnectedGraph, index: number = 0): boolean {
+  let visited: boolean[] = Array(graph.length).fill(false)
+
+  // traverse the graph with DFS
+  function dfs(index: number, reverse: boolean = false) {
+    if (visited[index]) return
+    visited[index] = true
+
+    if (reverse) {
+      graph[index].in.map(e => dfs(e, true))
+    } else {
+      graph[index].out.map(e => dfs(e))
+    }
+  }
+
+  dfs(index)
+
+  if (visited.includes(false)) return false
+
+  // check the inverse of the graph
+  visited = visited.fill(false)
+  dfs(index, true)
+
+  if (visited.includes(false)) return false
+
+  return true
+}
+
+function isConnected(graph: ConnectedGraph, index: number): boolean {
+  let visited: boolean[] = Array(graph.length).fill(false)
+
+  // traverse the graph with DFS
+  function dfs(index: number) {
+    if (visited[index]) return
+    visited[index] = true
+
+    graph[index].out.map(dfs)
+  }
+
+  dfs(index)
+
+  return !visited.includes(false)
 }
