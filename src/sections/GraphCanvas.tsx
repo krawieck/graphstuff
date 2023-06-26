@@ -123,6 +123,30 @@ export const GraphCanvas: React.FC = ({}) => {
           const howFarOut = (edgesCount[edgeId] - 1) * 20
           const middle = pointStickingOutBetweenPoints(actualPointA, actualPointB, howFarOut)
 
+          if (edge.a === edge.b) {
+            return (
+              <Arrow
+                key={edgeId + edgesCount[edgeId]}
+                stroke="black"
+                tension={0.7}
+                width={LINE_WIDTH}
+                points={[
+                  pointA.x + CIRCLE_RADIUS,
+                  pointA.y,
+
+                  pointA.x + CIRCLE_RADIUS + 35,
+                  pointA.y + CIRCLE_RADIUS - 10,
+
+                  pointA.x + CIRCLE_RADIUS + 25,
+                  pointA.y + CIRCLE_RADIUS + 25,
+
+                  pointB.x,
+                  pointB.y + CIRCLE_RADIUS,
+                ]}
+              />
+            )
+          }
+
           return (
             <Arrow
               key={edgeId + edgesCount[edgeId]}

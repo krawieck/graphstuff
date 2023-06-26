@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Button } from "../components/Button"
 import { useKeyPress } from "../hooks/useKeyHold"
 import { Eulerian } from "../math/eulerian"
 import { Hamiltonian } from "../math/hamiltonian"
@@ -47,6 +48,13 @@ export const ControlPanel: React.FC = () => {
   const [altLocation, setAltLocation] = useState(false)
   const [dropdownVertex, setDropdownVertex] = useState<Vertex | null>(null)
   const shiftIsPressed = useKeyPress("Shift")
+
+  function connectToItself() {
+    if (selectedVert == null) return
+
+    addEdge(selectedVert, selectedVert)
+    setSelectedVert(null)
+  }
 
   function handleRemoveVert(index: number) {
     if (selectedVert === index) setSelectedVert(null)
@@ -114,6 +122,8 @@ export const ControlPanel: React.FC = () => {
       and {describeHamiltonian(hamiltonian)}
       <br />
       {shiftIsPressed && <>[drag to connect edges]</>}
+      <br />
+      {selectedVert != null && <Button onClick={connectToItself}>connect to itself</Button>}
       {/* move window button */}
       <button className="float-right" onClick={() => setAltLocation(!altLocation)}>
         {altLocation ? "⤴️" : "⤵️"}
