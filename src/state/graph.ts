@@ -2,9 +2,8 @@ import { GetState, SetState, StateCreator, StoreApi, create } from "zustand"
 import { Edge } from "../models/edge"
 import { Vertex, distanceBetweenPoints } from "../models/vertex"
 
-import { calculateHamiltonianCycle, calculateHamiltonianPath } from "../math/algorithms"
 import { Eulerian, isEulerian } from "../math/eulerian"
-import { convertToAdjacencyMatrix } from "../math/hamiltonian"
+import { Hamiltonian, isHamiltonian } from "../math/hamiltonian"
 import { Point } from "../models/point"
 import "../util"
 
@@ -19,8 +18,7 @@ export interface GraphStore {
   moveVertex(index: number, newX: number, newY: number): void
   selectedVert: number | null
   setSelectedVert(vert: number | null): void
-  containsHamiltonianPath?: boolean
-  containsHamiltonianCycle?: boolean
+  hamiltonian?: Hamiltonian
   eulerian?: Eulerian
 }
 
@@ -52,24 +50,16 @@ function calculateGraphProperties(
   console.time("graph properties calculation time")
   set(state => ({
     eulerian: undefined,
-    containsHamiltonianCycle: undefined,
-    containsHamiltonianPath: undefined,
+    hamiltonian: undefined,
   }))
 
   const { vertices, edges } = get()
-  const adjacencyMatrix = convertToAdjacencyMatrix(vertices, edges)
 
   const eulerian = isEulerian(vertices, edges)
-  set({ eulerian: eulerian })
+  set({ eulerian })
 
-  const containsHamiltonianCycle = calculateHamiltonianCycle(adjacencyMatrix)
-  set({ containsHamiltonianCycle })
-  // don't calculate path if already contains cycle
-  if (containsHamiltonianCycle) {
-    set({ containsHamiltonianPath: true })
-  } else {
-    set({ containsHamiltonianPath: calculateHamiltonianPath(vertices, edges) })
-  }
+  const hamiltonian = isHamiltonian(vertices, edges)
+  set({ hamiltonian })
 
   console.timeEnd("graph properties calculation time")
 }
@@ -143,8 +133,7 @@ export const useGraphStore = create<GraphStore>(
       set(state => ({ selectedVert: vert }))
     },
     // CYCLES AND PATHS
-    containsHamiltonianPath: false,
-    containsHamiltonianCycle: false,
     eulerian: Eulerian.not,
+    hamiltonian: Hamiltonian.not,
   }))
 )

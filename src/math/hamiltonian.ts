@@ -20,6 +20,8 @@ export function isHamiltonian(verts: Vertex[], edges: Edge[]) {
 }
 
 function backtrackingHamiltonianCycle(graph: ConnectedGraph): Hamiltonian {
+  if (graph.length === 0) return Hamiltonian.not
+
   let path: number[] = []
   let visited: boolean[] = Array(graph.length).fill(false)
 
