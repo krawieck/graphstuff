@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Dropdown } from "../components/Dropdown"
+import { useKeyPress } from "../hooks/useKeyHold"
 import { Eulerian } from "../math/eulerian"
 import { Hamiltonian } from "../math/hamiltonian"
 import { Vertex } from "../models/vertex"
@@ -46,6 +46,7 @@ export const ControlPanel: React.FC = () => {
 
   const [altLocation, setAltLocation] = useState(false)
   const [dropdownVertex, setDropdownVertex] = useState<Vertex | null>(null)
+  const shiftIsPressed = useKeyPress("Shift")
 
   function handleRemoveVert(index: number) {
     if (selectedVert === index) setSelectedVert(null)
@@ -63,7 +64,14 @@ export const ControlPanel: React.FC = () => {
         altLocation ? "bottom-0 object-right-bottom" : "top-0 object-right-top"
       } right-0 fixed duration-250 transition-all bg-white float-right  w-1/5  shadow-md z-10 p-2 m-1 border-2 rounded-md  border-black border-solid`}
     >
-      vertices:
+      <strong>vertices:</strong>
+      {vertices.length === 0 && (
+        <>
+          <span className="text-indigo-400"> [no vertices yet]</span>
+          <br />
+          HINT: click to create vertices
+        </>
+      )}
       <ul>
         {vertices.map(({ x, y }, i) => (
           <li key={`${x}_${y}`}>
@@ -74,7 +82,14 @@ export const ControlPanel: React.FC = () => {
           </li>
         ))}
       </ul>
-      edges:
+      <strong>edges:</strong>
+      {edges.length === 0 && (
+        <>
+          <span className="text-indigo-400"> [no edges yet]</span>
+          <br />
+          HINT: shift+drag to create adges
+        </>
+      )}
       <ul>
         {edges.map((edge, i) => {
           if (edgesCount[edge.toString()]) edgesCount[edge.toString()]++
@@ -91,12 +106,6 @@ export const ControlPanel: React.FC = () => {
           )
         })}
       </ul>
-      <Dropdown<Vertex>
-        options={vertices.map((e, i) => ({ value: e, label: i.toString() }))}
-        unselectedText="select first vertex"
-        selected={dropdownVertex}
-        onChange={setDropdownVertex}
-      />
       <br />
       The graph is
       <br />
@@ -104,6 +113,7 @@ export const ControlPanel: React.FC = () => {
       <br />
       and {describeHamiltonian(hamiltonian)}
       <br />
+      {shiftIsPressed && <>[drag to connect edges]</>}
       {/* move window button */}
       <button className="float-right" onClick={() => setAltLocation(!altLocation)}>
         {altLocation ? "⤴️" : "⤵️"}

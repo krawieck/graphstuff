@@ -4,6 +4,10 @@ import { Point, Vec2 } from "../models/point"
 import { Vertex } from "../models/vertex"
 import "../util"
 
+export function isWithinCrircle(point: Point, circle: Point, radius: number): boolean {
+  return Math.pow2(point.x - circle.x) + Math.pow2(point.y - circle.y) < Math.pow2(radius)
+}
+
 export function calcAngle(a: Point, b: Point) {
   return Math.atan((b.y - a.y) / (b.x - a.x))
 }
