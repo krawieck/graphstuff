@@ -32,27 +32,25 @@ function isStronglyConnected(graph: ConnectedGraph, index: number = 0): boolean 
   let visited: boolean[] = Array(graph.length).fill(false)
 
   // traverse the graph with DFS
-  function dfs(index: number) {
+  function dfs(index: number, reverse: boolean = false) {
     if (visited[index]) return
     visited[index] = true
 
-    graph[index].out.map(dfs)
+    if (reverse) {
+      graph[index].in.map(e => dfs(e, true))
+    } else {
+      graph[index].out.map(e => dfs(e))
+    }
   }
 
-  function reverseDfs(index: number) {
-    if (visited[index]) return
-
-    visited[index] = true
-
-    graph[index].in.map(reverseDfs)
-  }
   dfs(index)
 
   if (visited.includes(false)) return false
 
   // check the inverse of the graph
   visited = visited.fill(false)
-  reverseDfs(index)
+  dfs(index, true)
+
   if (visited.includes(false)) return false
 
   return true
@@ -112,34 +110,39 @@ export function isEulerian(vertices: Vertex[], edges: Edge[]): Eulerian {
     }
   }
 
-  if (odds.length > 2) {
-    return Eulerian.not
-  } else if (odds.length === 2) {
-    const first = graph[odds[0]]
-    const second = graph[odds[1]]
+  switch (odds.length) {
+    case 0: // ALL EVEN
+      if (isStronglyConnected(graph)) {
+        return Eulerian.fully
+      } else {
+        return Eulerian.not
+      }
 
-    if (
-      Math.abs(first.in.length - first.out.length + (second.out.length - second.in.length)) === 2
-    ) {
-      return Eulerian.semi
-    } else {
-      return Eulerian.not
-    }
-  } else if (odds.length === 1) {
-    const odd = graph[odds[0]]
+    case 1: // 1 ODD
+      const odd = graph[odds[0]]
 
-    if (
-      Math.abs(odd.in.length - odd.out.length) === 1 &&
-      isConnected(graph, odds[0] === 0 ? 1 : 0)
-    ) {
-      return Eulerian.semi
-    } else {
+      if (
+        Math.abs(odd.in.length - odd.out.length) === 1 &&
+        isConnected(graph, odds[0] === 0 ? 1 : 0)
+      ) {
+        return Eulerian.semi
+      } else {
+        return Eulerian.not
+      }
+
+    case 2: // 2 ODDS
+      const first = graph[odds[0]]
+      const second = graph[odds[1]]
+
+      if (
+        Math.abs(first.in.length - first.out.length + (second.out.length - second.in.length)) === 2
+      ) {
+        return Eulerian.semi
+      } else {
+        return Eulerian.not
+      }
+
+    default: // >2 ODDS
       return Eulerian.not
-    }
   }
-  // all even
-
-  if (isStronglyConnected(graph)) return Eulerian.fully
-
-  return Eulerian.not
 }
