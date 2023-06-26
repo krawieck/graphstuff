@@ -1,5 +1,6 @@
 import { Edge } from "../models/edge"
 import { Vertex } from "../models/vertex"
+import { ConnectedGraph, toConnectedGraph } from "./utils"
 
 export enum Eulerian {
   /** eulerian graph */
@@ -8,24 +9,6 @@ export enum Eulerian {
   semi,
   /** not eulerian */
   not,
-}
-
-type ConnectedGraphElement = { in: number[]; out: number[] }
-type ConnectedGraph = Array<ConnectedGraphElement>
-
-function toConnectedGraph(vertices: Vertex[], edges: Edge[]): ConnectedGraph {
-  // initial with empty arrays
-  let verts: ConnectedGraph = Array(vertices.length)
-    .fill(undefined)
-    .map(e => ({ in: [], out: [] }))
-
-  // connections
-  for (const e of edges) {
-    verts[e.a].out.push(e.b)
-    verts[e.b].in.push(e.a)
-  }
-
-  return verts
 }
 
 function isStronglyConnected(graph: ConnectedGraph, index: number = 0): boolean {

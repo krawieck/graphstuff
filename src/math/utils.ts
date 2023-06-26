@@ -1,5 +1,7 @@
 import { CIRCLE_RADIUS } from "../contants"
+import { Edge } from "../models/edge"
 import { Point, Vec2 } from "../models/point"
+import { Vertex } from "../models/vertex"
 import "../util"
 
 export function calcAngle(a: Point, b: Point) {
@@ -37,4 +39,22 @@ export function pointStickingOutBetweenPoints(
   const firstPart = vecA.add(vecB).div(2)
   const secondPart = vecBminusA.div(vecBminusA.len()).rotate90().times(howMuchStickingOut)
   return firstPart.add(secondPart)
+}
+
+export type ConnectedGraphElement = { in: number[]; out: number[] }
+export type ConnectedGraph = Array<ConnectedGraphElement>
+
+export function toConnectedGraph(vertices: Vertex[], edges: Edge[]): ConnectedGraph {
+  // initial with empty arrays
+  let verts: ConnectedGraph = Array(vertices.length)
+    .fill(undefined)
+    .map(e => ({ in: [], out: [] }))
+
+  // connections
+  for (const e of edges) {
+    verts[e.a].out.push(e.b)
+    verts[e.b].in.push(e.a)
+  }
+
+  return verts
 }

@@ -13,6 +13,8 @@ describe("function for determining if graph is eulerian", () => {
       ["00", Eulerian.fully],
       ["00 00", Eulerian.fully],
       ["00 01 11", Eulerian.semi],
+      ["12 24 43 31 14 23", Eulerian.not],
+      ["05 03 12 14 20 31 40 51", Eulerian.fully],
     ]
 
     for (const [graph, expected] of testCases) {
