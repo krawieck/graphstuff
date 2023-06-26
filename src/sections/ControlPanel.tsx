@@ -16,11 +16,11 @@ function transformBool(contains?: boolean) {
 function describeEulerian(value?: Eulerian) {
   switch (value) {
     case Eulerian.fully:
-      return "eulerian"
+      return "eulerian 🤩"
     case Eulerian.semi:
-      return "semi-eulerian"
+      return "semi-eulerian 🙂"
     case Eulerian.not:
-      return "not eulerian"
+      return "not eulerian 😐"
     default:
       return "[checking...]"
   }
