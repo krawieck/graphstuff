@@ -42,6 +42,8 @@ export enum Eulerian {
 export function isEulerian(vertices: Vertex[], edges: Edge[]): Eulerian {
   let graph = toConnectedGraph(vertices, edges)
 
+  if (graph.length === 0) return Eulerian.not
+
   const odds: number[] = []
   for (let i = 0; i < graph.length; i++) {
     if (graph[i].in.length !== graph[i].out.length) {

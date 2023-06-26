@@ -1,7 +1,7 @@
 import { Edge } from "../models/edge"
 import { Vertex } from "../models/vertex"
 import "../util"
-import { ConnectedGraph, toConnectedGraph } from "./utils"
+import { toConnectedGraph } from "./utils"
 
 export enum Hamiltonian {
   /** not hamiltonian graph */
@@ -12,11 +12,11 @@ export enum Hamiltonian {
   fully,
 }
 
-export function isHamiltonian(verts: Vertex[], edges: Edge[]) {
-  return backtrackingHamiltonianCycle(toConnectedGraph(verts, edges))
-}
-
-function backtrackingHamiltonianCycle(graph: ConnectedGraph): Hamiltonian {
+/**
+ * Check if graph is hamiltonian or semi-hamiltonian using backtracking method
+ */
+export function isHamiltonian(verts: Vertex[], edges: Edge[]): Hamiltonian {
+  const graph = toConnectedGraph(verts, edges)
   if (graph.length === 0) return Hamiltonian.not
 
   let path: number[] = []
