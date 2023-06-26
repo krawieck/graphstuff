@@ -1,0 +1,145 @@
+import { Edge } from "../models/edge"
+import { Vertex } from "../models/vertex"
+
+export enum Eulerian {
+  /** eulerian graph */
+  fully,
+  /** semi-eulerian graph */
+  semi,
+  /** not eulerian */
+  not,
+}
+
+type ConnectedGraphElement = { in: number[]; out: number[] }
+type ConnectedGraph = Array<ConnectedGraphElement>
+
+function toConnectedGraph(vertices: Vertex[], edges: Edge[]): ConnectedGraph {
+  // initial with empty arrays
+  let verts: ConnectedGraph = Array(vertices.length)
+    .fill(undefined)
+    .map(e => ({ in: [], out: [] }))
+
+  // connections
+  for (const e of edges) {
+    verts[e.a].out.push(e.b)
+    verts[e.b].in.push(e.a)
+  }
+
+  return verts
+}
+
+function isStronglyConnected(graph: ConnectedGraph, index: number = 0): boolean {
+  let visited: boolean[] = Array(graph.length).fill(false)
+
+  // traverse the graph with DFS
+  function dfs(index: number) {
+    if (visited[index]) return
+    visited[index] = true
+
+    graph[index].out.map(dfs)
+  }
+
+  function reverseDfs(index: number) {
+    if (visited[index]) return
+
+    visited[index] = true
+
+    graph[index].in.map(reverseDfs)
+  }
+  dfs(index)
+
+  if (visited.includes(false)) return false
+
+  // check the inverse of the graph
+  visited = visited.fill(false)
+  reverseDfs(index)
+  if (visited.includes(false)) return false
+
+  return true
+}
+
+function isConnected(graph: ConnectedGraph, index: number): boolean {
+  let visited: boolean[] = Array(graph.length).fill(false)
+
+  // traverse the graph with DFS
+  function dfs(index: number) {
+    if (visited[index]) return
+    visited[index] = true
+
+    graph[index].out.map(dfs)
+  }
+
+  dfs(index)
+
+  return !visited.includes(false)
+}
+
+/**
+ * Checks if given graph is eulerian
+ *
+ * https://mathspace.co/textbooks/syllabuses/Syllabus-1030/topics/Topic-20297/subtopics/Subtopic-266708/
+ *
+ * eulerian:
+ *  "A graph is Eulerian if all vertices have even degree."
+ *
+ * semi-eulerian:
+ *  "A graph is semi-Eulerian if exactly two vertices have odd degree."
+ *
+ *
+ * https://en.wikipedia.org/wiki/Eulerian_path#Properties
+ *
+ * Section: Properties
+ * A directed graph has an Eulerian cycle if and only if every vertex has equal
+ * in degree and out degree, and all of its vertices with nonzero degree belong
+ * to a single strongly connected component. Equivalently, a directed graph has
+ * an Eulerian cycle if and only if it can be decomposed into edge-disjoint
+ * directed cycles and all of its vertices with nonzero degree belong to a
+ * single strongly connected component.
+ *
+ * A directed graph has an Eulerian trail if and only if at most one vertex has
+ * (out-degree) − (in-degree) = 1, at most one vertex has
+ * (in-degree) − (out-degree) = 1, every other vertex has equal in-degree and
+ * out-degree, and all of its vertices with nonzero degree belong to a single
+ * connected component of the underlying undirected graph.
+ */
+export function isEulerian(vertices: Vertex[], edges: Edge[]): Eulerian {
+  let graph = toConnectedGraph(vertices, edges)
+
+  const odds: number[] = []
+  for (let i = 0; i < graph.length; i++) {
+    if (graph[i].in.length !== graph[i].out.length) {
+      odds.push(i)
+    }
+  }
+
+  if (odds.length > 2) {
+    return Eulerian.not
+  } else if (odds.length === 2) {
+    const first = graph[odds[0]]
+    const second = graph[odds[1]]
+
+    if (
+      Math.abs(first.in.length - first.out.length + (second.out.length - second.in.length)) === 2
+    ) {
+      return Eulerian.semi
+    } else {
+      return Eulerian.not
+    }
+  } else if (odds.length === 1) {
+    const odd = graph[odds[0]]
+
+    if (
+      Math.abs(odd.in.length - odd.out.length) === 1 &&
+      isConnected(graph, odds[0] === 0 ? 1 : 0)
+    ) {
+      return Eulerian.semi
+    } else {
+      return Eulerian.not
+    }
+  }
+  // all even
+
+  if (isStronglyConnected(graph)) return Eulerian.fully
+
+  return Eulerian.not
+}
