@@ -59,7 +59,9 @@
         "height": 700,
         "resizable": true,
         "title": "Graph Stuff",
-        "width": 900
+        "width": 900,
+        "minWidth": 600,
+        "minHeight": 500
       }
     ]
   }
