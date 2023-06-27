@@ -70,7 +70,7 @@ export const ControlPanel: React.FC = () => {
     <div
       className={`${
         altLocation ? "bottom-0 object-right-bottom" : "top-0 object-right-top"
-      } right-0 fixed duration-250 transition-all bg-white float-right  w-1/5  shadow-md z-10 p-2 m-1 border-2 rounded-md  border-black border-solid`}
+      } right-0 fixed duration-250 transition-all bg-white float-right w-64 lg:w-1/5  shadow-md z-10 p-2 m-1 border-2 rounded-md  border-black border-solid`}
     >
       <strong>vertices:</strong>
       {vertices.length === 0 && (
