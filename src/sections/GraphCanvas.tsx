@@ -8,16 +8,11 @@ import {
   LINE_WIDTH,
   SELECTED_CIRCLE_COLOR,
 } from "../contants"
+import { useDraggingLine } from "../hooks/useDraggingLine"
 import { useKeyPress } from "../hooks/useKeyHold"
-import { arrowStickingPoint, isWithinCrircle, pointStickingOutBetweenPoints } from "../math/utils"
-import { Point } from "../models/point"
+import { arrowStickingPoint, pointStickingOutBetweenPoints } from "../math/utils"
 import { Vertex } from "../models/vertex"
 import { useGraphStore } from "../state/graph"
-
-interface MouseDrag {
-  from: Point
-  to: Point
-}
 
 export const GraphCanvas: React.FC = ({}) => {
   const {
@@ -32,9 +27,8 @@ export const GraphCanvas: React.FC = ({}) => {
   } = useGraphStore()
 
   const [visualVerts, setVisualVerts] = useState<Vertex[]>([])
-  const [line, setLine] = useState<MouseDrag | null>(null)
-  const [lineFrom, setLineFrom] = useState<number | null>(null)
   const shiftIsPressed = useKeyPress("Shift")
+  const { line, ...handleDraggingLine } = useDraggingLine()
 
   function handleClick(event: KonvaEventObject<MouseEvent>) {
     if (distanceToClosestVertex(event.evt) < CIRCLE_RADIUS * 2) return
@@ -43,37 +37,6 @@ export const GraphCanvas: React.FC = ({}) => {
     const { x, y } = event.evt
     addVert(x, y)
     setVisualVerts([...vertices])
-  }
-
-  // DRAG LINE FROM TO VERT
-  const handleDragginLine = {
-    mouseDown(i: number, event: KonvaEventObject<MouseEvent>) {
-      if (!shiftIsPressed) return
-      const { x, y } = event.evt
-      setLine({ from: vertices[i], to: { x, y } })
-      setLineFrom(i)
-    },
-    mouseUp(event: KonvaEventObject<MouseEvent>) {
-      if (line == null || lineFrom == null) return
-
-      const { x, y } = event.evt
-
-      for (let i = 0; i < vertices.length; i++) {
-        if (isWithinCrircle({ x, y }, vertices[i], CIRCLE_RADIUS)) {
-          addEdge(lineFrom, i)
-          break
-        }
-      }
-
-      setLine(null)
-      setLineFrom(null)
-    },
-    mouseDrag(event: KonvaEventObject<MouseEvent>) {
-      if (!shiftIsPressed || line == null) return
-
-      const { x, y } = event.evt
-      setLine({ from: line!.from, to: { x, y } })
-    },
   }
 
   // VERT DRAGGABLE
@@ -108,8 +71,8 @@ export const GraphCanvas: React.FC = ({}) => {
       onClick={handleClick}
       width={window.innerWidth}
       height={window.innerHeight}
-      onPointerUp={handleDragginLine.mouseUp}
-      onPointerMove={handleDragginLine.mouseDrag}
+      onPointerUp={handleDraggingLine.mouseUp}
+      onPointerMove={handleDraggingLine.mouseDrag}
     >
       <Layer>
         {edges.map((edge, i) => {
@@ -182,7 +145,7 @@ export const GraphCanvas: React.FC = ({}) => {
                 draggable={!shiftIsPressed}
                 onDragMove={e => handleVertDrag(i, e)}
                 onDragEnd={e => handleVertDragEnd(i, e)}
-                onMouseDown={e => handleDragginLine.mouseDown(i, e)}
+                onMouseDown={e => handleDraggingLine.mouseDown(i, e)}
                 onClick={e => handleVertClick(i)}
                 fill={i === selectedVert ? SELECTED_CIRCLE_COLOR : CIRCLE_COLOR}
               />
