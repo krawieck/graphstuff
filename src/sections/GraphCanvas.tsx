@@ -87,11 +87,6 @@ export const GraphCanvas: React.FC = ({}) => {
             edgesCount[edgeId] = 1
           }
 
-          const [actualPointA, actualPointB] = arrowStickingPoint(pointA, pointB)
-
-          const howFarOut = (edgesCount[edgeId] - 1) * 20
-          const middle = pointStickingOutBetweenPoints(actualPointA, actualPointB, howFarOut)
-
           if (edge.a === edge.b) {
             return (
               <Arrow
@@ -115,6 +110,11 @@ export const GraphCanvas: React.FC = ({}) => {
               />
             )
           }
+
+          const [actualPointA, actualPointB] = arrowStickingPoint(pointA, pointB)
+
+          const howFarOut = (edgesCount[edgeId] - 1) * 20
+          const middle = pointStickingOutBetweenPoints(actualPointA, actualPointB, howFarOut)
 
           return (
             <Arrow
