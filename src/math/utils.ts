@@ -1,6 +1,7 @@
 import { CIRCLE_RADIUS } from "../contants"
 import { Edge } from "../models/edge"
-import { Point, Vec2 } from "../models/point"
+import { Point } from "../models/point"
+import { Vec2 } from "../models/vec2"
 import { Vertex } from "../models/vertex"
 import "../util"
 
