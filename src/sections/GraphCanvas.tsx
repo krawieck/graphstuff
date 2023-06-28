@@ -1,7 +1,13 @@
 import { KonvaEventObject } from "konva/lib/Node"
 import { useState } from "react"
 import { Arrow, Circle, Layer, Stage } from "react-konva"
-import { CIRCLE_COLOR, CIRCLE_RADIUS, LINE_WIDTH, SELECTED_CIRCLE_COLOR } from "../contants"
+import {
+  CIRCLE_COLOR,
+  CIRCLE_RADIUS,
+  LINE_COLOR,
+  LINE_WIDTH,
+  SELECTED_CIRCLE_COLOR,
+} from "../contants"
 import { useKeyPress } from "../hooks/useKeyHold"
 import { arrowStickingPoint, isWithinCrircle, pointStickingOutBetweenPoints } from "../math/utils"
 import { Point } from "../models/point"
@@ -127,7 +133,7 @@ export const GraphCanvas: React.FC = ({}) => {
             return (
               <Arrow
                 key={edgeId + edgesCount[edgeId]}
-                stroke="black"
+                stroke={LINE_COLOR}
                 tension={0.7}
                 width={LINE_WIDTH}
                 points={[
@@ -150,7 +156,7 @@ export const GraphCanvas: React.FC = ({}) => {
           return (
             <Arrow
               key={edgeId + edgesCount[edgeId]}
-              stroke="black"
+              stroke={LINE_COLOR}
               tension={0.5}
               width={LINE_WIDTH}
               points={[
@@ -186,7 +192,7 @@ export const GraphCanvas: React.FC = ({}) => {
         {line != null && (
           <Arrow
             points={[line.from.x, line.from.y, line.to.x, line.to.y]}
-            stroke={"black"}
+            stroke={LINE_COLOR}
             width={LINE_WIDTH}
           />
         )}
