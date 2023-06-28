@@ -3,12 +3,12 @@ import { Vertex } from "../models/vertex"
 import { ConnectedGraph, toConnectedGraph } from "./utils"
 
 export enum Eulerian {
-  /** eulerian graph */
-  fully,
-  /** semi-eulerian graph */
-  semi,
   /** not eulerian */
   not,
+  /** semi-eulerian graph */
+  semi,
+  /** eulerian graph */
+  fully,
 }
 
 /**
