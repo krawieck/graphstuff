@@ -1,5 +1,8 @@
 import { Point } from "./point"
 
+/**
+ * 2-dimensional vector
+ */
 export class Vec2 implements Point {
   constructor(public x: number, public y: number) {}
 
