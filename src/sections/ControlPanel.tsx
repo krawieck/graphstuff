@@ -3,7 +3,6 @@ import { Button } from "../components/Button"
 import { useKeyPress } from "../hooks/useKeyHold"
 import { Eulerian } from "../math/eulerian"
 import { Hamiltonian } from "../math/hamiltonian"
-import { Vertex } from "../models/vertex"
 import { useGraphStore } from "../state/graph"
 
 function describeEulerian(value?: Eulerian) {
@@ -46,7 +45,6 @@ export const ControlPanel: React.FC = () => {
   } = useGraphStore()
 
   const [altLocation, setAltLocation] = useState(false)
-  const [dropdownVertex, setDropdownVertex] = useState<Vertex | null>(null)
   const shiftIsPressed = useKeyPress("Shift")
 
   function connectToItself() {
