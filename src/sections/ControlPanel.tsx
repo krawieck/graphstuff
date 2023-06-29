@@ -90,7 +90,7 @@ export const ControlPanel: React.FC = () => {
       <ul>
         {vertices.map(({ x, y }, i) => (
           <li key={`${x}_${y}`}>
-            vert {i + 1} ({x}, {y})
+            vert {i} ({x}, {y})
             <button className="pl-2" onClick={() => handleRemoveVert(i)}>
               ❌
             </button>
@@ -113,7 +113,7 @@ export const ControlPanel: React.FC = () => {
           const { a, b } = edge
           return (
             <li key={`edge_${a}_${b}_${edgesCount[edge.toString()]}`}>
-              edge {i + 1} ({a + 1}→{b + 1})
+              edge {i} ({a}→{b})
               <button className="pl-2" onClick={() => handleRemoveEdge(i)}>
                 ❌
               </button>
