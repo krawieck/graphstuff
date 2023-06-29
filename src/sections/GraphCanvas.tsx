@@ -1,6 +1,6 @@
 import { KonvaEventObject } from "konva/lib/Node"
 import { useState } from "react"
-import { Arrow, Circle, Layer, Stage } from "react-konva"
+import { Arrow, Circle, Layer, Stage, Text } from "react-konva"
 import {
   CIRCLE_COLOR,
   CIRCLE_RADIUS,
@@ -148,6 +148,14 @@ export const GraphCanvas: React.FC = ({}) => {
                 onMouseDown={e => handleDraggingLine.mouseDown(i, e)}
                 onClick={e => handleVertClick(i)}
                 fill={i === selectedVert ? SELECTED_CIRCLE_COLOR : CIRCLE_COLOR}
+              />
+              <Text
+                key={`text_${x}_${y}`}
+                listening={false}
+                x={x - 5}
+                y={y - 5}
+                text={i.toString()}
+                fontSize={16}
               />
             </>
           )

@@ -10,5 +10,5 @@ declare interface Array<T> {
   /** Math.max of list of elements */
   max(): T
   /** pops an element at [index] and returns it */
-  popAt(index: number): void
+  popAt(index: number): T
 }

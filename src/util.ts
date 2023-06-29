@@ -8,5 +8,5 @@ Array.prototype.max = function () {
 }
 
 Array.prototype.popAt = function (index) {
-  return this.splice(index, 1)
+  return this.splice(index, 1)[0]
 }

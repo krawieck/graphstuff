@@ -3,6 +3,7 @@ import { Button } from "../components/Button"
 import { useKeyPress } from "../hooks/useKeyHold"
 import { Eulerian } from "../math/eulerian"
 import { Hamiltonian } from "../math/hamiltonian"
+import { findPath } from "../math/pathfinding"
 import { useGraphStore } from "../state/graph"
 
 function describeEulerian(value?: Eulerian) {
@@ -46,6 +47,14 @@ export const ControlPanel: React.FC = () => {
 
   const [altLocation, setAltLocation] = useState(false)
   const shiftIsPressed = useKeyPress("Shift")
+  const [source, setSource] = useState<number>(0)
+  const [target, setTarget] = useState<number>(0)
+
+  function handleFindPath() {
+    const found = findPath(vertices, edges, source, target)
+
+    alert("the path is: " + found)
+  }
 
   function connectToItself() {
     if (selectedVert == null) return
@@ -68,7 +77,7 @@ export const ControlPanel: React.FC = () => {
     <div
       className={`${
         altLocation ? "bottom-0 object-right-bottom" : "top-0 object-right-top"
-      } right-0 fixed duration-250 transition-all bg-white float-right w-64 lg:w-1/5  shadow-md z-10 p-2 m-1 border-2 rounded-md  border-black border-solid`}
+      } right-0 overflow-scroll fixed max-h-96 duration-250 transition-all bg-white float-right w-64 lg:w-1/5  shadow-md z-10 p-2 m-1 border-2 rounded-md  border-black border-solid`}
     >
       <strong>vertices:</strong>
       {vertices.length === 0 && (
@@ -93,7 +102,7 @@ export const ControlPanel: React.FC = () => {
         <>
           <span className="text-indigo-400"> [no edges yet]</span>
           <br />
-          HINT: shift+drag to create adges
+          HINT: shift+drag to create edges
         </>
       )}
       <ul>
@@ -112,6 +121,23 @@ export const ControlPanel: React.FC = () => {
           )
         })}
       </ul>
+      <hr />
+      find path from
+      <input
+        type="number"
+        value={source}
+        className="w-24 px-2"
+        onChange={e => setSource(parseInt(e.currentTarget.value))}
+      />
+      to
+      <input
+        type="number"
+        className="w-24 px-2"
+        value={target}
+        onChange={e => setTarget(parseInt(e.currentTarget.value))}
+      />
+      shortestPath
+      <Button onClick={handleFindPath}>find path</Button>
       <br />
       The graph is
       <br />
