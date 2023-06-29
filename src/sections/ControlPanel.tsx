@@ -121,33 +121,37 @@ export const ControlPanel: React.FC = () => {
           )
         })}
       </ul>
-      <hr />
-      find path from
-      <input
-        type="number"
-        value={source}
-        className="w-24 px-2"
-        onChange={e => setSource(parseInt(e.currentTarget.value))}
-      />
-      to
-      <input
-        type="number"
-        className="w-24 px-2"
-        value={target}
-        onChange={e => setTarget(parseInt(e.currentTarget.value))}
-      />
-      shortestPath
-      <Button onClick={handleFindPath}>find path</Button>
-      <br />
-      The graph is
-      <br />
-      {describeEulerian(eulerian)}
-      <br />
-      and {describeHamiltonian(hamiltonian)}
-      <br />
-      {shiftIsPressed && <>[drag to connect edges]</>}
-      <br />
-      {selectedVert != null && <Button onClick={connectToItself}>connect to itself</Button>}
+      {vertices.length > 0 && (
+        <>
+          <hr />
+          find path from
+          <input
+            type="number"
+            value={source}
+            className="w-24 px-2"
+            onChange={e => setSource(parseInt(e.currentTarget.value))}
+          />
+          to
+          <input
+            type="number"
+            className="w-24 px-2"
+            value={target}
+            onChange={e => setTarget(parseInt(e.currentTarget.value))}
+          />
+          shortestPath
+          <Button onClick={handleFindPath}>find path</Button>
+          <br />
+          The graph is
+          <br />
+          {describeEulerian(eulerian)}
+          <br />
+          and {describeHamiltonian(hamiltonian)}
+          <br />
+          {shiftIsPressed && <>[drag to connect edges]</>}
+          <br />
+          {selectedVert != null && <Button onClick={connectToItself}>connect to itself</Button>}
+        </>
+      )}
       {/* move window button */}
       <button className="float-right" onClick={() => setAltLocation(!altLocation)}>
         {altLocation ? "⤴️" : "⤵️"}
