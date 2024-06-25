@@ -27,7 +27,6 @@ export function findPath(
 
     visitedNodes.push(check)
 
-    console.log(q)
     for (const node of graph[check].out) {
       if (visited[node]) continue
 
@@ -41,12 +40,6 @@ export function findPath(
   }
   if (!found) return null
 
-  console.log("finding path")
-
-  // find the path
-
-  console.log(visitedNodes)
-  // return null
   let path: number[] = [target]
   let current = target
   while (current !== root) {

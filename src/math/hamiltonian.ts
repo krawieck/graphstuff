@@ -51,7 +51,9 @@ export function isHamiltonian(verts: Vertex[], edges: Edge[]): Hamiltonian {
   let startingIndex = 0
   while (startingIndex != -1) {
     const result = dfs(startingIndex)
-    if (result != Hamiltonian.not || !visited.includes(false)) return result
+    if (result != Hamiltonian.not || !visited.includes(false)) {
+      return result
+    }
     startingIndex = visited.findIndex(e => !e)
   }
 
