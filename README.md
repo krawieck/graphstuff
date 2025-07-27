@@ -9,6 +9,10 @@ The goal of the project is to create a desktop application that allows the user 
 and check whether they contain a Eulerian cycle, Eulerian path, Hamiltonian cycle, Hamiltonian path, and find the shortest path
 (containing the fewest edges) between points.
 
+You can run the web app version [here](https://krawieck.github.io/graphstuff/).
+
+You can read the official documentation PDF [here](https://github.com/krawieck/graphstuff/blob/main/docs/Projekt%20Programistyczny%20Indywidualny.pdf) (in Polish).
+
 ## Technologies
 
 The program was created using the following web technologies:

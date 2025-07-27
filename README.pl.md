@@ -11,6 +11,10 @@ wizualne tworzenie grafów skierowanych oraz sprawdzanie czy zawierają one cykl
 Eulera, ścieżkę Eulera, cykl Hamiltona, ścieżkę Hamiltona oraz znajdowanie najkrótszej
 (zawierającą najmniejszą ilość krawędzi) trasy między punktami.
 
+Wersja webowa aplikacji jest dostępna [tutaj](https://krawieck.github.io/graphstuff/).
+
+Oficjalna dokumentacja w formacie PDF jest dostępna [tutaj](https://github.com/krawieck/graphstuff/blob/main/docs/Projekt%20Programistyczny%20Indywidualny.pdf).
+
 ## Opis programu
 
 Program został stworzony z użyciem następujących technologi webowych:
